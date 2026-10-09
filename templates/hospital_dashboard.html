@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% block title %}Hospital Dashboard | Save Children’s Lives{% endblock %}
+{% block content %}
+<section class="container page-section">
+  <div class="dashboard-header">
+    <div>
+      <span class="eyebrow">Hospital</span>
+      <h1>Verification Review Queue</h1>
+    </div>
+    <span class="demo-tag">DEMO</span>
+  </div>
+
+  <div class="stats-grid four-cols">
+    <div class="stat-card panel"><span>Assigned Reviews</span><strong>08</strong><small>New cases</small></div>
+    <div class="stat-card panel"><span>Identity Verified</span><strong>05</strong><small>Approved</small></div>
+    <div class="stat-card panel"><span>Medical Docs</span><strong>07</strong><small>Verified</small></div>
+    <div class="stat-card panel"><span>Pending</span><strong>03</strong><small>Awaiting check</small></div>
+  </div>
+
+  <div class="task-list">
+    {% for task in tasks %}
+    <div class="panel task-card">
+      <div class="task-head">
+        <div>
+          <span class="eyebrow">{{ task.condition }}</span>
+          <h3>{{ task.patient }}</h3>
+        </div>
+        <span class="status-pill info">{{ task.status }}</span>
+      </div>
+      <div class="verify-badges">
+        {% for badge in task.badges %}
+        <span class="badge-pill">{{ badge }}</span>
+        {% endfor %}
+      </div>
+      <div class="task-content-grid">
+        <div><strong>Diagnosis</strong><p>ICD-coded medical evaluation, diagnosis report and treatment summary</p></div>
+        <div><strong>Treatment</strong><p>Specialized pediatric treatment plan with procedure requirement</p></div>
+        <div><strong>Cost estimate</strong><p>₹4,20,000 estimated treatment plus follow-up support</p></div>
+        <div><strong>Milestones</strong><p>Diagnosis, treatment, surgery, recovery, follow-up</p></div>
+      </div>
+      <div class="task-actions">
+        <button class="btn btn-primary">Review</button>
+        <button class="btn btn-secondary">Request Clarification</button>
+        <button class="btn btn-ghost">Approve</button>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}

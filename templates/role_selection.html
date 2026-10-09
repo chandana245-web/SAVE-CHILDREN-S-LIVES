@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% block title %}Choose Role | Save Children’s Lives{% endblock %}
+{% block content %}
+<section class="container page-section narrow">
+  <div class="section-heading center">
+    <span class="eyebrow">Prototype access</span>
+    <h1>Choose your role</h1>
+    <p>Admins, hospitals, donors and patient guardians each have separate demo access.</p>
+  </div>
+
+  <div class="role-grid three-cols">
+    <div class="role-card panel">
+      <div class="icon-wrap blue">❤</div>
+      <h3>Patient / Guardian</h3>
+      <p>Submit cases, upload documents and track treatment milestones.</p>
+      <a href="{{ url_for('register') }}" class="btn btn-primary btn-block">Continue as Guardian</a>
+    </div>
+    <div class="role-card panel">
+      <div class="icon-wrap teal">💙</div>
+      <h3>Donor</h3>
+      <p>Review verified child campaigns and make demo donations.</p>
+      <a href="{{ url_for('register') }}" class="btn btn-secondary btn-block">Continue as Donor</a>
+    </div>
+    <div class="role-card panel">
+      <div class="icon-wrap aqua">🏥</div>
+      <h3>Hospital</h3>
+      <p>Review medical documents, verify diagnoses and treatment estimates.</p>
+      <a href="{{ url_for('register') }}" class="btn btn-tertiary btn-block">Continue as Hospital</a>
+    </div>
+  </div>
+</section>
+{% endblock %}

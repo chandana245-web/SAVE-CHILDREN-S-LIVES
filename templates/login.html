@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block title %}Login | Save Children’s Lives{% endblock %}
+{% block content %}
+<section class="container page-section narrow auth-page">
+  <div class="panel form-panel">
+    <h1>Welcome Back</h1>
+    <p class="subtitle">Log in to continue your journey</p>
+    <form method="post" action="{{ url_for('login') }}" class="auth-form">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token }}" />
+      <div class="field-group">
+        <label>Email or username</label>
+        <input type="email" name="email" required />
+      </div>
+      <div class="field-group">
+        <label>Password</label>
+        <input type="password" name="password" required />
+      </div>
+      <div class="field-group">
+        <label>Role</label>
+        <select name="role">
+          <option value="Patient">Patient / Guardian</option>
+          <option value="Donor">Donor</option>
+          <option value="Hospital">Hospital</option>
+          <option value="Admin">Admin</option>
+        </select>
+      </div>
+      <button type="submit" class="btn btn-primary btn-block">Login</button>
+    </form>
+  </div>
+</section>
+{% endblock %}

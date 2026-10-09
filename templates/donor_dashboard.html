@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% block title %}Donor Dashboard | Save Children’s Lives{% endblock %}
+{% block content %}
+<section class="container page-section">
+  <div class="dashboard-header">
+    <div>
+      <span class="eyebrow">Donor</span>
+      <h1>Search Verified Children</h1>
+    </div>
+    <span class="demo-tag">DEMO</span>
+  </div>
+
+  <div class="stats-grid four-cols">
+    <div class="stat-card panel"><span>My Donations</span><strong>₹27,500</strong><small>Demo total</small></div>
+    <div class="stat-card panel"><span>Saved Cases</span><strong>4</strong><small>Shortlisted</small></div>
+    <div class="stat-card panel"><span>Donation History</span><strong>12</strong><small>Transactions</small></div>
+    <div class="stat-card panel"><span>Verification</span><strong>All active</strong><small>Saved records</small></div>
+  </div>
+
+  <div class="panel search-panel">
+    <form method="get" action="{{ url_for('find_children') }}" class="filter-form">
+      <div class="three-col-inputs">
+        <input type="text" name="query" placeholder="Search by case name, disease or location" />
+        <select name="disease"><option value="">Disease</option><option>SMA Type 1</option><option>Childhood Cancer</option><option>Organ Transplant</option><option>Rare Disease</option></select>
+        <select name="urgency"><option value="">Urgency</option><option>Critical</option><option>High</option><option>Moderate</option></select>
+      </div>
+      <button class="btn btn-primary" type="submit">Search</button>
+    </form>
+  </div>
+
+  <div class="campaign-grid">
+    {% for campaign in campaigns %}
+    <article class="campaign-card panel">
+      <div class="campaign-meta">
+        <span class="case-id">{{ campaign.case_id }}</span>
+        <span class="demo-banner">DEMO DATA</span>
+      </div>
+      <h3>{{ campaign.name }}</h3>
+      <p class="condition">{{ campaign.condition }}</p>
+      <p>{{ campaign.story }}</p>
+      <div class="fund-figure">
+        <strong>₹{{ '%.0f'|format(campaign.amount_required) }}</strong>
+        <span>Required</span>
+      </div>
+      <div class="progress-bar"><span style="width: {{ ((campaign.amount_raised / campaign.amount_required) * 100) if campaign.amount_required else 0 }}%"></span></div>
+      <div class="campaign-totals">
+        <span>Raised: ₹{{ '%.0f'|format(campaign.amount_raised) }}</span>
+        <span>Remaining: ₹{{ '%.0f'|format(campaign.amount_required - campaign.amount_raised) }}</span>
+      </div>
+      <div class="badge-row small-badges">
+        {% for badge in campaign.badges_list %}
+          <span class="badge-pill">{{ badge }}</span>
+        {% endfor %}
+      </div>
+      <div class="campaign-actions">
+        <a href="{{ url_for('campaign_detail', campaign_id=campaign.id) }}" class="btn btn-ghost">View Case</a>
+        <a href="{{ url_for('campaign_detail', campaign_id=campaign.id) }}" class="btn btn-primary">Donate</a>
+      </div>
+    </article>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}

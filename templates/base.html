@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% block title %}Save Children’s Lives{% endblock %}</title>
+    <meta name="description" content="AI-powered medical assistance, verification and transparent crowdfunding for children." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+    {% block head %}{% endblock %}
+  </head>
+  <body>
+    <div class="site-shell">
+      <header class="site-header">
+        <div class="container nav-wrap">
+          <a href="{{ url_for('index') }}" class="brand" aria-label="Save Children's Lives home">
+            <span class="brand-mark">
+              <span class="heart">❤</span>
+            </span>
+            <span class="brand-text">
+              <strong>Save Children’s Lives</strong>
+              <small>Protecting Little Lives</small>
+            </span>
+          </a>
+
+          <nav class="main-nav" aria-label="Main navigation">
+            <a href="{{ url_for('index') }}">Home</a>
+            <a href="{{ url_for('find_children') }}">Find Children</a>
+            <a href="{{ url_for('how_it_works') }}">How It Works</a>
+            <a href="{{ url_for('about') }}">About</a>
+            <a href="{{ url_for('find_children') }}">Donate</a>
+            <a href="{{ url_for('fundraiser_form') }}">Start a Fundraiser</a>
+          </nav>
+
+          <div class="nav-actions">
+            <label class="language-picker" aria-label="Select language">
+              <select id="languageSelect" aria-label="Language selector">
+                <option value="en">English</option>
+                <option value="te">తెలుగు</option>
+              </select>
+            </label>
+            {% if current_user %}
+              <a href="{{ url_for('dashboard') }}" class="btn btn-primary btn-small">Dashboard</a>
+              <a href="{{ url_for('logout') }}" class="btn btn-ghost btn-small">Logout</a>
+            {% else %}
+              <a href="{{ url_for('index') }}" class="btn btn-primary btn-small">Login</a>
+            {% endif %}
+            <button class="menu-toggle" id="menuToggle" aria-label="Open mobile menu" aria-expanded="false">
+              <span></span><span></span><span></span>
+            </button>
+          </div>
+        </div>
+
+        <aside class="side-drawer" id="sideDrawer" aria-label="Mobile navigation">
+          <div class="drawer-header">
+            <h3>Explore</h3>
+            <button class="drawer-close" id="drawerClose" aria-label="Close menu">×</button>
+          </div>
+          <nav class="drawer-nav">
+            <a href="{{ url_for('index') }}">Home</a>
+            <a href="{{ url_for('find_children') }}">Find Children</a>
+            <a href="{{ url_for('how_it_works') }}">How It Works</a>
+            <a href="{{ url_for('about') }}">About</a>
+            <a href="{{ url_for('fundraiser_form') }}">Start a Fundraiser</a>
+            <a href="{{ url_for('contact') }}">Contact</a>
+            <a href="{{ url_for('privacy_policy') }}">Privacy Policy</a>
+            <a href="{{ url_for('terms') }}">Terms</a>
+            {% if current_user %}
+              <a href="{{ url_for('dashboard') }}">Dashboard</a>
+            {% else %}
+              <a href="{{ url_for('index') }}">Login / Register</a>
+            {% endif %}
+            <div class="drawer-section">
+              <span>Patient / Guardian</span>
+              <span>Donor</span>
+              <span>Hospital</span>
+              <span>Login/Register</span>
+              <span>Language</span>
+            </div>
+          </nav>
+        </aside>
+      </header>
+
+      <main class="page-main">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            <div class="flash-stack container">
+              {% for category, message in messages %}
+                <div class="flash flash-{{ category }}">{{ message }}</div>
+              {% endfor %}
+            </div>
+          {% endif %}
+        {% endwith %}
+        {% block content %}{% endblock %}
+      </main>
+
+      <footer class="site-footer">
+        <div class="container footer-grid">
+          <div>
+            <h4>Save Children’s Lives</h4>
+            <p>Protecting Little Lives, Creating Hope.</p>
+          </div>
+          <div>
+            <h5>Explore</h5>
+            <ul>
+              <li><a href="{{ url_for('find_children') }}">Verified Cases</a></li>
+              <li><a href="{{ url_for('how_it_works') }}">How it works</a></li>
+              <li><a href="{{ url_for('about') }}">About</a></li>
+            </ul>
+          </div>
+          <div>
+            <h5>Resources</h5>
+            <ul>
+              <li><a href="{{ url_for('privacy_policy') }}">Privacy Policy</a></li>
+              <li><a href="{{ url_for('terms') }}">Terms</a></li>
+              <li><a href="{{ url_for('contact') }}">Contact</a></li>
+            </ul>
+          </div>
+        </div>
+      </footer>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+    {% block scripts %}{% endblock %}
+  </body>
+</html>

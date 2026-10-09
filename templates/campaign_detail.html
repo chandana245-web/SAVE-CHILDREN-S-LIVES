@@ -1,0 +1,143 @@
+{% extends 'base.html' %}
+{% block title %}{{ campaign.name }} | Save Children’s Lives{% endblock %}
+{% block content %}
+<section class="container page-section campaign-page">
+  <div class="campaign-hero panel">
+    <div class="campaign-hero-copy">
+      <span class="eyebrow">{{ campaign.case_id }}</span>
+      <h1>{{ campaign.name }}</h1>
+      <div class="badge-row">
+        {% for badge in badge_list %}
+        <span class="badge-pill">{{ badge }}</span>
+        {% endfor %}
+      </div>
+      <p>{{ campaign.story }}</p>
+      <div class="campaign-stat-row">
+        <div><strong>Condition</strong><span>{{ campaign.condition }}</span></div>
+        <div><strong>Hospital</strong><span>{{ campaign.hospital }}</span></div>
+        <div><strong>Doctor</strong><span>{{ campaign.doctor }}</span></div>
+      </div>
+    </div>
+    <div class="campaign-funding-box panel inner">
+      <span class="demo-banner large">DEMO DATA</span>
+      <h3>₹{{ '%.0f'|format(campaign.amount_raised) }} raised</h3>
+      <div class="progress-bar"><span style="width: {{ ((campaign.amount_raised / campaign.amount_required) * 100) if campaign.amount_required else 0 }}%"></span></div>
+      <div class="fund-amounts">
+        <div><span>Required</span><strong>₹{{ '%.0f'|format(campaign.amount_required) }}</strong></div>
+        <div><span>Remaining</span><strong>₹{{ '%.0f'|format(campaign.amount_required - campaign.amount_raised) }}</strong></div>
+      </div>
+      <div class="donation-amounts">
+        <button class="pill-btn" data-amount="500">₹500</button>
+        <button class="pill-btn" data-amount="1000">₹1,000</button>
+        <button class="pill-btn" data-amount="2000">₹2,000</button>
+        <button class="pill-btn" data-amount="5000">₹5,000</button>
+      </div>
+      <form method="post" action="{{ url_for('donate_campaign', campaign_id=campaign.id) }}" class="donation-form">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token }}" />
+        <div class="field-group inline-donation">
+          <input type="number" name="amount" id="customAmount" min="1" placeholder="Custom amount" />
+          <button type="submit" class="btn btn-primary">Confirm Demo Donation</button>
+        </div>
+      </form>
+      <p class="demo-note">No real money is transferred in this prototype. This is a demo donation only.</p>
+    </div>
+  </div>
+
+  <div class="two-col-layout dashboard-grid">
+    <div class="panel">
+      <div class="mini-header"><h3>Campaign details</h3></div>
+      <div class="info-list">
+        <div><strong>Condition:</strong> {{ campaign.condition }}</div>
+        <div><strong>Location:</strong> {{ campaign.location }}</div>
+        <div><strong>Urgency:</strong> {{ campaign.urgency }}</div>
+        <div><strong>Hospital:</strong> {{ campaign.hospital }}</div>
+        <div><strong>Doctor:</strong> {{ campaign.doctor }}</div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="mini-header"><h3>Fund utilization</h3></div>
+      <div class="utilization-rows">
+        <div class="util-row"><span>Total Raised</span><strong>₹{{ '%.0f'|format(metrics.total_raised) }}</strong></div>
+        <div class="util-row"><span>Used</span><strong>₹{{ '%.0f'|format(metrics.total_raised * 0.45) }}</strong></div>
+        <div class="util-row"><span>Remaining</span><strong>₹{{ '%.0f'|format(metrics.remaining) }}</strong></div>
+        <div class="util-row"><span>Hospital Treatment</span><strong>₹{{ '%.0f'|format(metrics.total_raised * 0.35) }}</strong></div>
+        <div class="util-row"><span>Medicines</span><strong>₹{{ '%.0f'|format(metrics.total_raised * 0.18) }}</strong></div>
+        <div class="util-row"><span>Follow-up Expenses</span><strong>₹{{ '%.0f'|format(metrics.total_raised * 0.12) }}</strong></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="two-col-layout dashboard-grid">
+    <div class="panel">
+      <div class="mini-header"><h3>Treatment milestones</h3></div>
+      <div class="milestones-list">
+        {% for milestone in milestones %}
+        <div class="milestone-item">
+          <div class="milestone-top">
+            <strong>{{ milestone.name }}</strong>
+            <span class="status-pill {% if milestone.completed %}success{% else %}pending{% endif %}">{% if milestone.completed %}Completed{% else %}In progress{% endif %}</span>
+          </div>
+          <div class="milestone-values">
+            <span>Required: ₹{{ milestone.required }}</span>
+            <span>Funded: ₹{{ milestone.funded }}</span>
+          </div>
+          <div class="progress-bar small"><span style="width: {{ (milestone.funded / milestone.required) * 100 }}%"></span></div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="panel hope-assistant-panel">
+      <div class="mini-header"><h3>Hope Assistant</h3></div>
+      <p class="mini-note">Hope Assistant provides information from campaign data and is not a medical or financial advisor.</p>
+      <div class="assistant-box" id="assistantBox">
+        <p>Ask about the campaign. Example: “Is this case verified?”</p>
+      </div>
+      <div class="assistant-input-row">
+        <input type="text" id="assistantInput" placeholder="Ask a question about this case" />
+        <button class="btn btn-primary" id="assistantButton">Ask</button>
+      </div>
+      <script type="application/json" id="campaignData">
+        {
+          "verified": "{{ campaign.verification_status }}",
+          "treatment": "{{ campaign.condition }}",
+          "raised": "₹{{ '%.0f'|format(campaign.amount_raised) }}",
+          "cost": "₹{{ '%.0f'|format(campaign.amount_required) }}",
+          "hospital": "{{ campaign.hospital }}",
+          "milestone": "Treatment",
+          "fundTracking": "Transparent tracking with milestone reporting and demo figures"
+        }
+      </script>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  const assistantInput = document.getElementById('assistantInput');
+  const assistantButton = document.getElementById('assistantButton');
+  const assistantBox = document.getElementById('assistantBox');
+  const data = JSON.parse(document.getElementById('campaignData').textContent);
+
+  function respond(question) {
+    const lower = question.toLowerCase();
+    if (lower.includes('verified')) return `This case status is: ${data.verified}.`;
+    if (lower.includes('treatment')) return `The treatment required is ${data.treatment}.`;
+    if (lower.includes('raised')) return `The amount raised is ${data.raised}.`;
+    if (lower.includes('cost') || lower.includes('estimated')) return `The estimated treatment cost is ${data.cost}.`;
+    if (lower.includes('hospital')) return `The hospital involved is ${data.hospital}.`;
+    if (lower.includes('fund') || lower.includes('track')) return `Funds are tracked with clear milestone reporting and demo transparency. ${data.fundTracking}`;
+    if (lower.includes('milestone')) return `The current milestone is ${data.milestone}.`;
+    return 'That detail is not available in the campaign data.';
+  }
+
+  assistantButton.addEventListener('click', () => {
+    const value = assistantInput.value.trim();
+    if (!value) return;
+    assistantBox.innerHTML = '<p>' + respond(value) + '</p>';
+    assistantInput.value = '';
+  });
+</script>
+{% endblock %}

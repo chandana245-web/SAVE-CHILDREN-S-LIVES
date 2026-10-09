@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block title %}Notifications | Save Children’s Lives{% endblock %}
+{% block content %}
+<section class="container page-section narrow">
+  <div class="section-heading left">
+    <span class="eyebrow">Updates</span>
+    <h1>Notifications</h1>
+  </div>
+
+  <div class="panel list-panel">
+    {% if notifications %}
+      {% for item in notifications %}
+      <div class="notification-item">
+        <div class="notification-element">
+          <strong>{{ item.title }}</strong>
+          <p>{{ item.message }}</p>
+        </div>
+        <span class="notification-time">{{ item.created_at }}</span>
+      </div>
+      {% endfor %}
+    {% else %}
+      <div class="empty-state">No notifications are available at the moment.</div>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

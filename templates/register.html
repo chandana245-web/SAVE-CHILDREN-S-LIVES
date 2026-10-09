@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% block title %}Create Account | Save Children’s Lives{% endblock %}
+{% block content %}
+<section class="container page-section narrow auth-page">
+  <div class="panel form-panel">
+    <div class="heading-row">
+      <div>
+        <span class="eyebrow">Join the mission</span>
+        <h1>Create an Account</h1>
+      </div>
+      <span class="demo-tag">DEMO</span>
+    </div>
+
+    <form method="post" action="{{ url_for('register') }}" class="auth-form wide-form">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token }}" />
+      <div class="two-col">
+        <div class="field-group">
+          <label for="reg-name">Full name</label>
+          <input id="reg-name" type="text" name="name" required />
+        </div>
+        <div class="field-group">
+          <label for="reg-role">Role</label>
+          <select id="reg-role" name="role">
+            <option value="Patient">Patient / Guardian</option>
+            <option value="Donor">Donor</option>
+            <option value="Hospital">Hospital</option>
+            <option value="Admin">Admin</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="two-col">
+        <div class="field-group">
+          <label for="reg-email">Email</label>
+          <input id="reg-email" type="email" name="email" required />
+        </div>
+        <div class="field-group">
+          <label for="reg-phone">Phone</label>
+          <input id="reg-phone" type="tel" name="phone" />
+        </div>
+      </div>
+
+      <div class="field-group">
+        <label for="reg-organization">Organization or family unit</label>
+        <input id="reg-organization" type="text" name="organization" placeholder="Optional" />
+      </div>
+
+      <div class="two-col">
+        <div class="field-group">
+          <label for="reg-password">Password</label>
+          <input id="reg-password" type="password" name="password" required />
+        </div>
+        <div class="field-group">
+          <label for="reg-confirm">Confirm password</label>
+          <input id="reg-confirm" type="password" name="confirm_password" required />
+        </div>
+      </div>
+
+      <button type="submit" class="btn btn-primary btn-block">Create Account</button>
+      <p class="helper-text">This is a prototype system only. No real financial or medical data is processed.</p>
+    </form>
+  </div>
+</section>
+{% endblock %}

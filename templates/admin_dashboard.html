@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+{% block title %}Admin Dashboard | Save Children’s Lives{% endblock %}
+{% block head %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+{% endblock %}
+{% block content %}
+<section class="container page-section">
+  <div class="dashboard-header">
+    <div>
+      <span class="eyebrow">Admin</span>
+      <h1>Operations Dashboard</h1>
+    </div>
+    <span class="demo-tag">DEMO</span>
+  </div>
+
+  <div class="stats-grid six-cols">
+    <div class="stat-card panel"><span>Total Applications</span><strong>{{ metrics.total_applications }}</strong><small>All stages</small></div>
+    <div class="stat-card panel"><span>Verified Cases</span><strong>{{ metrics.verified_cases }}</strong><small>Safe check</small></div>
+    <div class="stat-card panel"><span>Pending Verification</span><strong>{{ metrics.pending_verification }}</strong><small>Needs review</small></div>
+    <div class="stat-card panel"><span>High Risk Alerts</span><strong>{{ metrics.high_risk_alerts }}</strong><small>AI flag</small></div>
+    <div class="stat-card panel"><span>Total Demo Donations</span><strong>₹{{ '%.0f'|format(metrics.total_demo_donations or 0) }}</strong><small>Mock receipts</small></div>
+    <div class="stat-card panel"><span>Active Campaigns</span><strong>{{ metrics.active_campaigns }}</strong><small>Open cases</small></div>
+  </div>
+
+  <div class="two-col-layout dashboard-grid">
+    <div class="panel">
+      <div class="mini-header"><h3>Applications by status</h3></div>
+      <canvas id="applicationChart" height="160"></canvas>
+    </div>
+    <div class="panel">
+      <div class="mini-header"><h3>Campaign funding</h3></div>
+      <canvas id="fundingChart" height="160"></canvas>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="mini-header"><h3>Risk alerts</h3></div>
+    <div class="risk-list">
+      {% for alert in risk_alerts %}
+      <div class="risk-item">
+        <div>
+          <strong>{{ alert.title }}</strong>
+          <p>AI alert raised for review. No automatic rejection is triggered.</p>
+        </div>
+        <span class="status-pill {% if alert.severity == 'High' %}danger{% else %}warning{% endif %}">{{ alert.severity }}</span>
+        <div class="risk-actions">
+          <button class="btn btn-ghost btn-small">Review</button>
+          <button class="btn btn-primary btn-small">Request Clarification</button>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  const applicationChart = new Chart(document.getElementById('applicationChart'), {
+    type: 'bar',
+    data: {
+      labels: ['Draft', 'Submitted', 'AI Verification', 'Hospital Verification', 'Approved'],
+      datasets: [{
+        label: 'Applications',
+        data: [12, 7, 9, 5, 3],
+        backgroundColor: ['#0757A0', '#09AAA9', '#7ad4d4', '#A7DCE6', '#D9F4F4']
+      }]
+    },
+    options: { responsive: true, plugins: { legend: { display: false } } }
+  });
+
+  const fundingChart = new Chart(document.getElementById('fundingChart'), {
+    type: 'doughnut',
+    data: {
+      labels: ['Raised', 'Used', 'Remaining'],
+      datasets: [{
+        data: [58, 27, 15],
+        backgroundColor: ['#0757A0', '#09AAA9', '#EAFBFC']
+      }]
+    },
+    options: { responsive: true }
+  });
+</script>
+{% endblock %}

@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+{% block title %}Find Children | Save Children’s Lives{% endblock %}
+{% block content %}
+<section class="container page-section">
+  <div class="section-heading center">
+    <span class="eyebrow">Verified Cases</span>
+    <h1>Search Children in Need</h1>
+    <p>Browse demo campaigns, filter by disease, urgency and verification status.</p>
+  </div>
+
+  <div class="panel search-panel">
+    <form method="get" action="{{ url_for('find_children') }}" class="filter-form">
+      <div class="three-col-inputs">
+        <input type="text" name="query" value="{{ filters.query }}" placeholder="Search campaign or location" />
+        <select name="disease">
+          <option value="">Disease</option>
+          <option value="SMA Type 1" {% if filters.disease == 'SMA Type 1' %}selected{% endif %}>SMA Type 1</option>
+          <option value="Childhood Cancer" {% if filters.disease == 'Childhood Cancer' %}selected{% endif %}>Childhood Cancer</option>
+          <option value="Organ Transplant" {% if filters.disease == 'Organ Transplant' %}selected{% endif %}>Organ Transplant</option>
+          <option value="Rare Disease" {% if filters.disease == 'Rare Disease' %}selected{% endif %}>Rare Disease</option>
+        </select>
+        <select name="urgency">
+          <option value="">Urgency</option>
+          <option value="Critical" {% if filters.urgency == 'Critical' %}selected{% endif %}>Critical</option>
+          <option value="High" {% if filters.urgency == 'High' %}selected{% endif %}>High</option>
+          <option value="Moderate" {% if filters.urgency == 'Moderate' %}selected{% endif %}>Moderate</option>
+        </select>
+      </div>
+      <button class="btn btn-primary" type="submit">Search</button>
+    </form>
+  </div>
+
+  <div class="campaign-grid">
+    {% if campaigns %}
+      {% for campaign in campaigns %}
+      <article class="campaign-card panel">
+        <div class="campaign-meta">
+          <span class="case-id">{{ campaign.case_id }}</span>
+          <span class="demo-banner">DEMO DATA</span>
+        </div>
+        <h3>{{ campaign.name }}</h3>
+        <p class="condition">{{ campaign.condition }}</p>
+        <p>{{ campaign.story }}</p>
+        <div class="fund-figure">
+          <strong>₹{{ '%.0f'|format(campaign.amount_required) }}</strong>
+          <span>Required</span>
+        </div>
+        <div class="progress-bar"><span style="width: {{ ((campaign.amount_raised / campaign.amount_required) * 100) if campaign.amount_required else 0 }}%"></span></div>
+        <div class="campaign-totals">
+          <span>Raised: ₹{{ '%.0f'|format(campaign.amount_raised) }}</span>
+          <span>Remaining: ₹{{ '%.0f'|format(campaign.amount_required - campaign.amount_raised) }}</span>
+        </div>
+        <div class="badge-row small-badges">
+          {% for badge in campaign.badges_list %}
+            <span class="badge-pill">{{ badge }}</span>
+          {% endfor %}
+        </div>
+        <div class="campaign-actions">
+          <a href="{{ url_for('campaign_detail', campaign_id=campaign.id) }}" class="btn btn-ghost">View Case</a>
+          <a href="{{ url_for('campaign_detail', campaign_id=campaign.id) }}" class="btn btn-primary">Donate</a>
+        </div>
+      </article>
+      {% endfor %}
+    {% else %}
+      <div class="empty-state panel">No campaigns match the current search filters.</div>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

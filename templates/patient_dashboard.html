@@ -1,0 +1,116 @@
+{% extends 'base.html' %}
+{% block title %}Patient Dashboard | Save Children’s Lives{% endblock %}
+{% block content %}
+<section class="container page-section">
+  <div class="dashboard-header">
+    <div>
+      <span class="eyebrow">Patient / Guardian</span>
+      <h1>Welcome, {{ current_user.name }}</h1>
+    </div>
+    <span class="demo-tag">DEMO</span>
+  </div>
+
+  <div class="stats-grid four-cols">
+    <div class="stat-card panel">
+      <span>Profile</span>
+      <strong>Ready</strong>
+      <small>Verified contact</small>
+    </div>
+    <div class="stat-card panel">
+      <span>Application Status</span>
+      <strong>Draft</strong>
+      <small>Needs review</small>
+    </div>
+    <div class="stat-card panel">
+      <span>AI Verification</span>
+      <strong>In progress</strong>
+      <small>Reviewing details</small>
+    </div>
+    <div class="stat-card panel">
+      <span>Fundraising Progress</span>
+      <strong>₹3.8L</strong>
+      <small>Raised so far</small>
+    </div>
+  </div>
+
+  <div class="dashboard-grid two-col-layout">
+    <div class="panel">
+      <div class="mini-header">
+        <h3>Application Status</h3>
+      </div>
+      <ul class="status-list">
+        {% for step in status_steps %}
+        <li class="status-item {% if loop.index <= 3 %}active{% endif %}">
+          <span class="dot"></span>
+          <div>
+            <strong>{{ step }}</strong>
+            <small>{% if loop.index == 1 %}Draft{% elif loop.index == 2 %}Submitted{% elif loop.index == 3 %}AI Verification{% elif loop.index == 4 %}Hospital Verification{% elif loop.index == 5 %}Approved{% else %}Clarification requested{% endif %}</small>
+          </div>
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+
+    <div class="panel">
+      <div class="mini-header">
+        <h3>Quick Actions</h3>
+      </div>
+      <div class="action-stack">
+        <a href="{{ url_for('fundraiser_form') }}" class="btn btn-primary btn-block">Start a Fundraiser</a>
+        <a href="{{ url_for('ai_verification') }}" class="btn btn-secondary btn-block">AI Verification Status</a>
+        <a href="{{ url_for('notifications') }}" class="btn btn-ghost btn-block">Notifications</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel table-panel">
+    <div class="mini-header">
+      <h3>Recent Fundraiser Applications</h3>
+    </div>
+    {% if applications %}
+    <table>
+      <thead>
+        <tr>
+          <th>Child</th>
+          <th>Condition</th>
+          <th>Hospital</th>
+          <th>Status</th>
+          <th>Requested</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in applications %}
+        <tr>
+          <td>{{ item.child_name or 'Pending' }}</td>
+          <td>{{ item.medical_condition or 'N/A' }}</td>
+          <td>{{ item.hospital_name or 'N/A' }}</td>
+          <td><span class="status-pill">{{ item.status }}</span></td>
+          <td>₹{{ '%.0f'|format(item.amount_requested or 0) }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <div class="empty-state">No applications yet. Start your first fundraiser to begin the process.</div>
+    {% endif %}
+  </div>
+
+  <div class="panel">
+    <div class="mini-header">
+      <h3>Notifications</h3>
+    </div>
+    {% if notifications %}
+    <ul class="notification-list">
+      {% for note in notifications %}
+      <li>
+        <strong>{{ note.title }}</strong>
+        <p>{{ note.message }}</p>
+      </li>
+      {% endfor %}
+    </ul>
+    {% else %}
+    <div class="empty-state">No notifications right now.</div>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% block title %}AI Verification | Save Children’s Lives{% endblock %}
+{% block content %}
+<section class="container page-section narrow">
+  <div class="section-heading center">
+    <span class="eyebrow">AI Preliminary Verification</span>
+    <h1>Reviewing Your Case</h1>
+    <p>AI assists with preliminary verification and risk detection. Final verification requires human review and, where applicable, hospital confirmation.</p>
+  </div>
+
+  <div class="panel ai-panel">
+    <div class="verification-hero">
+      <div>
+        <div class="progress-ring"><span>92%</span></div>
+      </div>
+      <div>
+        <h3>{{ result }}</h3>
+        <p>We are checking patient information, hospital consistency, treatment cost, document quality, duplicate detection and unusual patterns.</p>
+        <div class="status-row">
+          <button class="btn btn-primary">Request Clarification</button>
+          <button class="btn btn-ghost">Continue Review</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="checklist-grid">
+      {% for item in checks %}
+      <div class="check-item {% if item.status == 'pass' %}pass{% elif item.status == 'warning' %}warning{% else %}neutral{% endif %}">
+        <span class="state-icon">{% if item.status == 'pass' %}✓{% elif item.status == 'warning' %}!{% else %}–{% endif %}</span>
+        <span>{{ item.name }}</span>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endblock %}

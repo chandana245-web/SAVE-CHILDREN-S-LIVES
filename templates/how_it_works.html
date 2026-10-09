@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block title %}How It Works | Save Children’s Lives{% endblock %}
+{% block content %}
+<section class="container page-section">
+  <div class="section-heading center">
+    <span class="eyebrow">How it works</span>
+    <h1>Trusted steps for care and support</h1>
+  </div>
+
+  <div class="steps-grid">
+    {% for step in steps %}
+    <div class="step-card panel">
+      <span class="step-number">0{{ loop.index }}</span>
+      <h3>{{ step.title }}</h3>
+      <p>{{ step.description }}</p>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}
